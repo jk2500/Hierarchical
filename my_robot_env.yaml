@@ -1,0 +1,60 @@
+# General simulation settings
+simulation_parameters:
+  gravity: -9.8               # Gravity in m/s^2
+  physics_timestep: 0.02      # Timestep in seconds
+  rendering_timestep: 0.02    # Rendering timestep in seconds
+  mode: headless              # Rendering mode: headless, gui, or iggui
+  resolution: [256, 256]      # Resolution of rendered images
+  texture_randomization: True # Enable texture randomization
+  object_randomization: True  # Enable object randomization
+  action_timestep: 1.0        # Timestep for high-level actions
+
+# Robot setup
+robot:
+  name: locobot               # Name of the robot (e.g., locobot, turtlebot, fetch)
+  sensors:                    # List of sensors attached to the robot
+    - name: rgb               # RGB camera
+      width: 256
+      height: 256
+      fov: 90                 # Field of view in degrees
+      position: [0, 0, 1.5]   # Camera position relative to the robot
+      orientation: [0, 0, 0]  # Camera orientation (roll, pitch, yaw)
+    - name: depth             # Depth camera
+      width: 256
+      height: 256
+      fov: 90
+      position: [0, 0, 1.5]
+      orientation: [0, 0, 0]
+
+# Scene setup
+scene:
+  type: InteractiveIndoorScene # Type of scene (e.g., InteractiveIndoorScene, StadiumScene)
+  scene_id: Rs_int             # Scene ID (from iGibson dataset)
+  load_object_categories:      # List of object categories to load
+    - chair
+    - table
+    - sofa
+    - bed
+  build_graph: True            # Build a connectivity graph for navigation tasks
+
+# Task setup
+task:
+  type: InteractiveNavTask     # Type of task (e.g., InteractiveNavTask, ObjectNavTask)
+  target_objects:              # List of target objects for the task
+    - chair
+    - table
+  reward_type: dense           # Reward type (e.g., dense, sparse)
+  termination_conditions:      # Termination conditions for the task
+    - type: Timeout            # End the episode after a certain number of steps
+      max_steps: 500
+    - type: Collision          # End the episode if the robot collides too many times
+      max_collisions: 10
+  success_conditions:          # Conditions for successfully completing the task
+    - type: ObjectReach        # Success if the robot reaches the target object
+      object: chair
+
+# Randomization options
+randomization:
+  robot_position: True         # Randomize robot starting position
+  object_positions: True       # Randomize object positions
+  object_scales: True          # Randomize object scales
